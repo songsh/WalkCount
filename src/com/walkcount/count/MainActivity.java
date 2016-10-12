@@ -20,6 +20,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,12 +65,30 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 		
 	}
 
-	
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	   super.onCreateOptionsMenu(menu);
+	   menu.add(0, 0, 0,"sensor view");
+	   return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			Intent intent = new Intent(MainActivity.this,DataActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	private void initViews() {
 		tv_status = (TimelyTextView) findViewById(R.id.tv_statue);
 
-		 tb_start = (ToggleButton) findViewById(R.id.tb_start);
+		tb_start = (ToggleButton) findViewById(R.id.tb_start);
 		tb_start.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -121,7 +141,6 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 					intent.putExtra("count", fromNumber);
 					sendBroadcast(intent);
 				}
-				
 			}
 		});	
 	}

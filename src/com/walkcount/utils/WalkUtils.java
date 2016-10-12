@@ -65,17 +65,19 @@ public class WalkUtils {
 		}
 	}
 	private void initStepSensor(){
+		
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 		mSensorListener = new SensorEventListener() {
 			
 			@Override
 			public void onSensorChanged(SensorEvent event) {
-				if (event.sensor.getType() != Sensor.TYPE_STEP_COUNTER)
+				if (event.sensor.getType() != Sensor.TYPE_STEP_DETECTOR)
 					return;
 				
 				Log.i("tag", event.values[0]+"");
-				zaxisIndex = (int)event.values[0];
+				fromNumber = (int)event.values[0];
+				callback.walkCount(fromNumber);
 			}
 			
 			@Override
@@ -149,7 +151,9 @@ public class WalkUtils {
 			// mShakeListener.stop();
 			zaxis = new float[i_zaxis];
 			mSensorManager.registerListener(mSensorListener, mSensor, mRate);
-			startTimer();
+			if(walkType == SensorType.Linear){
+				startTimer();
+			}
 		} else {
 			Toast.makeText(context, "Orientation sensor is not found.",10).show();
 		}
@@ -161,18 +165,22 @@ public class WalkUtils {
 		}
 		if(t1!=null){
 			t1.cancel();
+			t1 = null;
 		}
 		t1 = new MyTimerTask();
 		t.scheduleAtFixedRate(t1, 1, 1000 * 30);
-		
 	}
 
 	public void stop() {
 		if (isReady()) {
 			mSensorManager.unregisterListener(mSensorListener);
 		}
-		if(t !=null){
-			t.cancel();
+		if(walkType == SensorType.Linear){
+			if(t !=null){
+				t.cancel();
+				t.purge();
+				t = null;
+			}
 		}
 		Intent intent = new Intent(context,CountService.class);
 		intent.putExtra("flag", 1);
