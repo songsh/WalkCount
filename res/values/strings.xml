@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">运动快乐</string>
+    <string name="menu1">传感器数据</string>
+    <string name="menu2">历史数据</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello dony!</string>
     <string name="walkcount">今天走了%s步</string>

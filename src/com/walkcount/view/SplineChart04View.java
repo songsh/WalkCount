@@ -128,7 +128,7 @@ public class SplineChart04View extends DemoView {
 			chart.getDataAxis().setAxisSteps(2);
 			
 			//标签轴最大�?
-			chart.setCategoryAxisMax(200);	
+			chart.setCategoryAxisMax(100);	
 			//标签轴最小�?
 			chart.setCategoryAxisMin(0);
 			
@@ -175,15 +175,17 @@ public class SplineChart04View extends DemoView {
 	private void chartDataSet()
 	{
 		
-							
+				linePoint1.add(new PointD(0d, 0d));		
 				SplineData dataSeries1 = new SplineData("original",linePoint1,
 						Color.rgb(54, 141, 238) );
-				//把线弄细�?				
+				//把线弄细�?	
+				
 				dataSeries1.getLinePaint().setStrokeWidth(3);
 				dataSeries1.setLineStyle(XEnum.LineStyle.DASH);	
 				dataSeries1.setLabelVisible(false);					
 				dataSeries1.setDotStyle(XEnum.DotStyle.HIDE);
 
+				linePoint2.add(new PointD(0d, 0d));	
 				SplineData dataSeries2 = new SplineData("sqart",linePoint2,
 						Color.rgb(255, 165, 132) );										
 				dataSeries2.setLabelVisible(false);		
@@ -236,7 +238,7 @@ public class SplineChart04View extends DemoView {
 	
 	public void updateData(LinkedList<Float> oList,LinkedList<Float> dList){
 		
-		if(linePoint1.size()>200){
+		if(linePoint1.size()>100){
 			linePoint1.clear();
 			linePoint2.clear();
 		}

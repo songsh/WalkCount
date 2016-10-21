@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.walkcount.R;
+import com.walkcount.utils.LogUtils;
 import com.walkcount.view.SplineChart04View;
 
 public class DataActivity extends Activity{
@@ -24,7 +25,7 @@ public class DataActivity extends Activity{
 	private SensorManager mSensorManager;
 	private SensorEventListener mSensorListener;
 	private Sensor mSensor;
-	private int mRate = 200 * 1000;
+	private int mRate = SensorManager.SENSOR_DELAY_UI; //200 * 1000;
 	private LinkedList<Float> oLinkedList = new LinkedList<Float>();
 	private LinkedList<Float> sqartLinkedList = new LinkedList<Float>();
 	@Override
@@ -51,7 +52,7 @@ public class DataActivity extends Activity{
 	private void initLinearSensor() {
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 		mSensor = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorListener = new SensorEventListener() {
 			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -60,7 +61,7 @@ public class DataActivity extends Activity{
 			@Override
 			public void onSensorChanged(SensorEvent event) {
 				try {
-					if (event.sensor.getType() != Sensor.TYPE_LINEAR_ACCELERATION)
+					if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
 						return;
 					Log.i("sensor", event.values[SensorManager.DATA_Z]+"");
 					long curTime = System.currentTimeMillis();
@@ -68,6 +69,7 @@ public class DataActivity extends Activity{
 					sqartLinkedList.add((float) Math.sqrt(Math.pow(event.values[0], 2)
 			                + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
 					
+//					LogUtils.file(DataActivity.this, String.format("%1$,.5f::::%1$,.5f", oLinkedList.getFirst(),sqartLinkedList.getFirst()));
 					lineView.updateData(oLinkedList, sqartLinkedList);
 					
 				} catch (Exception e) {

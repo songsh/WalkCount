@@ -34,6 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.walkcount.dao.WalkCountDao;
+import com.walkcount.utils.DateUtils;
 import com.walkcount.utils.WalkUtils;
 
 public class MainActivity extends Activity implements WalkUtils.Callback{
@@ -49,10 +52,11 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 	private TimelyTextView tv_status;
 	public long lastUpdateTime;
 	private WalkUtils walkUtils;
+	WalkCountDao countDao = new WalkCountDao();
+	public String nowDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_music);
 		if(savedInstanceState!=null){
@@ -60,16 +64,26 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 			fromNumber = savedInstanceState.getInt("count", 0);
 		}
 		initViews();
+		initData();
 		walkUtils = WalkUtils.getInstance(MainActivity.this);
 		walkUtils.setListener(this);
 		
+		
+	}
+
+
+	private void initData() {
+		nowDate = DateUtils.getNowDate();
+		fromNumber = countDao.getCount(nowDate);
+		tv_status.setText(fromNumber + "");
 	}
 
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	   super.onCreateOptionsMenu(menu);
-	   menu.add(0, 0, 0,"sensor view");
+	   menu.add(0, 0, 0,getString(R.string.menu1));
+	   menu.add(0, 0, 0,getString(R.string.menu2));
 	   return true;
 	}
 	
@@ -78,6 +92,10 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 		switch (item.getItemId()) {
 		case 0:
 			Intent intent = new Intent(MainActivity.this,DataActivity.class);
+			startActivity(intent);
+			break;
+		case 1:
+			intent = new Intent(MainActivity.this,DataActivity.class);
 			startActivity(intent);
 			break;
 		default:
@@ -131,6 +149,7 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 			public void run() {
 				tv_status.start(fromNumber, fromNumber + count);
 				fromNumber = fromNumber + count;
+				countDao.save(nowDate, fromNumber);
 				if(!CountService.isRunning){
 					Intent intent = new Intent(MainActivity.this,CountService.class);
 					intent.putExtra("flag", 0);
