@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 	private final int i_zaxis = 1600;
 	protected int fromNumber =0 ;
 	private ToggleButton tb_start;
-	private boolean bCheck = false;
+	private boolean bCheck = true;
 	private TimelyTextView tv_status;
 	public long lastUpdateTime;
 	private WalkUtils walkUtils;
@@ -63,10 +63,11 @@ public class MainActivity extends Activity implements WalkUtils.Callback{
 			bCheck  = savedInstanceState.getBoolean("isCheck");
 			fromNumber = savedInstanceState.getInt("count", 0);
 		}
-		initViews();
-		initData();
 		walkUtils = WalkUtils.getInstance(MainActivity.this);
 		walkUtils.setListener(this);
+		initViews();
+		initData();
+		
 		
 		
 	}
